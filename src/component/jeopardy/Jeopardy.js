@@ -1,6 +1,7 @@
 import React, { Component, useDebugValue } from 'react';
 //import our service
 import JeopardyService from '../jeopardyService';
+import Score from '../Score';
 class Jeopardy extends Component {
   //set our initial state and set up our service as this.client on this component
   constructor(props) {
@@ -24,7 +25,7 @@ class Jeopardy extends Component {
   componentDidMount() {
     this.getNewQuestion();
   }
-  
+
   updateScore = (event) => {
     event.preventDefault();
     let dataAnswer = this.state.data.answer.toLowerCase();
@@ -37,45 +38,32 @@ class Jeopardy extends Component {
       }))
       this.getNewQuestion()
 
-    } else{
+    } else {
       this.setState((state, props) => ({
         score: state.score - state.data.value,
         answer: ""
       }))
       this.getNewQuestion()
 
+    }
   }
+
+  handleChange = (event) => {
+
+    this.setState({ answer: event.target.value })
   }
 
-  handleChange= (event)=>{
 
-    this.setState({answer:event.target.value})
-      }
-
-    
   //display the results on the screen
   render() {
-    let categoryTitle = 'waiting'
-    if (this.state.data.category) {
-      categoryTitle = this.state.data.category.title;
-    }
+    
     return (
       <div>
-        {JSON.stringify(this.state.data)}
-
-        <h2>{this.state.data.value}</h2>
-        <h4>{this.state.data.question}</h4>
-        <h8>{this.state.data.answer}</h8>
-        <div><h8>{categoryTitle}</h8></div>
-
-        <form onSubmit={this.updateScore}>
-          <label htmlFor="Enter Answer">Enter Answer:</label>
-          <input type="text" name=""  onChange={this.handleChange} value={this.state.answer}/>
-          <button>Submit</button>
-        </form>
-        <h4>Score:{this.state.score}</h4>
+        <Score question={this.state.data.question} category={this.state.data.title} value={this.state.data.value} score={this.state.score}
+          userAnswer={this.state.userAnswer} handleChange={this.handleChange} updateScore={this.updateScore}
+        />
       </div>
-    );
+    )
   }
 }
 
